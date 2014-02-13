@@ -102,31 +102,23 @@ def rest_of_ORF(dna):
         dna: a DNA sequence
         returns: the open reading frame represented as a string
     """
-    # Define stop codons.
-    stops = ['TAG', 'TAA', 'TGA']
+    # Filter blocks.
+    for nucleotide in range(0,len(dna),3):
+        if dna[nucleotide:nucleotide+3] == 'TAG' or dna[nucleotide:nucleotide+3] == 'TAA' or dna[nucleotide:nucleotide+3] == 'TGA':
+            return dna[0:nucleotide]
+            break
     
-    # Definte an empty array for storing stop codon positions.
-    lowest = []
-    
-    # Find and test the earliest stop codon.
-    for stop in stops:
-        if stop in dna:
-            if dna.index(stop) % 3 == 0:
-                lowest.append(dna.index(stop))
-    
-    if len(lowest) == 0:
-        return dna[0:]
-    else:
-        return dna[0:min(lowest)]
+    # Return whole sequence if not complete.
+    return dna
 
 def rest_of_ORF_unit_tests():
     """ Unit tests for the rest_of_ORF function """
     print "input: ATGTGAA"
     print "expected output: ATG"
     print "actual output: " + rest_of_ORF("ATGTGAA")
-    print "input: ATGAGATAGG"
-    print "expected output: ATGAGA"
-    print "acutal output: " + rest_of_ORF("ATGAGATAGG")
+    print "input: ATGAGATACGATGAGATAGG"
+    print "expected output: ATGAGATACGATGAGATAGG"
+    print "acutal output: " + rest_of_ORF("ATGAGATACGATGAGATAGG")
 # rest_of_ORF_unit_tests()
         
 def find_all_ORFs_oneframe(dna):
@@ -145,7 +137,7 @@ def find_all_ORFs_oneframe(dna):
     # For loop that finds all start codons and returns their end ORFs.
     for nucleotide in range(0,len(dna),3):
         if dna[nucleotide:nucleotide+3] == 'ATG':
-            return_array.append('ATG' + rest_of_ORF(dna[nucleotide+3:]))
+            return_array.append(rest_of_ORF(dna[nucleotide:]))
 
     return return_array
             
@@ -202,8 +194,8 @@ def longest_ORF(dna):
 
 def longest_ORF_unit_tests():
     """ Unit tests for the longest_ORF function """
-    return longest_ORF("ATGCGAATGTAGCATCAAA")
-    # return longest_ORF("12321312")
+    # return longest_ORF("ATGCGAATGTAGCATCAAA")
+    return longest_ORF("12321312ATGATG")
 # print longest_ORF_unit_tests()
 
 def longest_ORF_noncoding(dna, num_trials):
@@ -217,13 +209,15 @@ def longest_ORF_noncoding(dna, num_trials):
     max_ORF = []
 
     # Shuffle and save all the longest ORFs.
-    for shuffle in range(num_trials):
+    for _ in range(num_trials):
         dna = list(dna)
         random.shuffle(dna)
         new_dna = ''.join(dna)
         max_ORF.append(len(longest_ORF(new_dna)))
 
     return max(max_ORF)
+
+# print longest_ORF_noncoding('ATGCATGAATGTAGATAGATGTGCCCATTTAA',1)
 
 def gene_finder(dna, threshold):
     """ Returns the amino acid sequences coded by all genes that have an ORF
@@ -235,5 +229,24 @@ def gene_finder(dna, threshold):
         returns: a list of all amino acid sequences whose ORFs meet the minimum
                  length specified.
     """
+    ORFs = find_all_ORFs_both_strands(dna)
+    AAs = []
 
-    # YOUR IMPLEMENTATION HERE
+    for ORF in ORFs:
+        if len(ORF) >= threshold:
+            AA = coding_strand_to_AA(ORF)
+            AAs.append(AA)
+    
+    return AAs
+# print gene_finder('ATGCATGAATGTAGATAGATGTGCCCATTTAA', 30)
+
+if __name__ == "__main__":
+    from load import load_seq
+    dna = load_seq("./data/X73525.fa")
+
+    # Uncomment this find our threshold
+    # longest = longest_ORF_noncoding(dna, 1500)
+    # print longest
+    
+    longest = 891
+    print gene_finder(dna, longest)

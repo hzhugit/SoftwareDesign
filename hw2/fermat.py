@@ -12,3 +12,7 @@ def fermat_input():
     check_fermat(a, b, c, n)
 
 fermat_input()
+
+'''
+Excellent, excellent work!
+'''

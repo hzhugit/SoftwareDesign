@@ -5,8 +5,14 @@ def compare(x, y):
         return 1
     elif x == y:
         return 0
-    elif x < y:
+    elif x < y:       # would have used else: statement
         return -1
 
 if __name__ == "__main__":
     print compare(4, 8)
+
+'''
+I personally would have used an all-inclusive else: statement
+
+Excellent use of main script!
+'''

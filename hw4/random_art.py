@@ -97,4 +97,4 @@ if __name__ == "__main__":
             im.putpixel((i,j),(color_red,color_green,color_blue))
 
     # Save.
-    im.save('test.bmp')
+    im.save('example1.bmp')

@@ -98,3 +98,4 @@ if __name__ == "__main__":
 
     # Save.
     im.save('example1.bmp')
+    im.show()

@@ -73,10 +73,10 @@ def remap_interval(val, input_interval_start, input_interval_end, output_interva
 
 if __name__ == "__main__":
     # Customizable settings.
-    min_depth = 10
-    max_depth = 11
-    x_range = 350
-    y_range = 350
+    min_depth = 5
+    max_depth = 5  
+    x_range = 1600
+    y_range = 900
     im = Image.new("RGB",(x_range,y_range))
 
     # Declare color equations.
@@ -97,4 +97,5 @@ if __name__ == "__main__":
             im.putpixel((i,j),(color_red,color_green,color_blue))
 
     # Save.
-    im.save('example1.bmp')
+    # im.save(str(randint(0,100000))+'.bmp')
+    im.save('wallpaper.bmp')
